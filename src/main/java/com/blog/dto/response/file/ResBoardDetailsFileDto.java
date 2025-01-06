@@ -19,7 +19,6 @@ public class ResBoardDetailsFileDto {
     private String originFileName;
     private String fileType;
 
-
     @Builder
     public ResBoardDetailsFileDto(Long fileId, String originFileName, String fileType) {
         this.fileId = fileId;
@@ -27,7 +26,7 @@ public class ResBoardDetailsFileDto {
         this.fileType = fileType;
     }
 
-    public static ResBoardDetailsFileDto fromEntity(FileEntity file){
+    public static ResBoardDetailsFileDto fromEntity(FileEntity file) {
         return ResBoardDetailsFileDto.builder()
                 .fileId(file.getId())
                 .originFileName(file.getOriginFileName())

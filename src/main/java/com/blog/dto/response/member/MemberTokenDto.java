@@ -14,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Setter
 @NoArgsConstructor
 public class MemberTokenDto {
-
     private String email;
     private String token;
 
@@ -24,10 +23,10 @@ public class MemberTokenDto {
         this.token = token;
     }
 
-    //Entity -> DTO
-    public  static MemberTokenDto fromEntity(UserDetails member, String token){
+    // Entity -> DTO
+    public static MemberTokenDto fromEntity(UserDetails member, String token) {
         return MemberTokenDto.builder()
-                .email(member.getUsername()) //이메일(사용자 정보)
+                .email(member.getUsername())
                 .token(token)
                 .build();
     }

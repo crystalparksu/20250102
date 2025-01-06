@@ -17,25 +17,20 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ResFileDownloadDto {
 
-    private String fileName;
+    private String filename;
     private String fileType;
     private byte[] content;
 
-
     @Builder
-    public ResFileDownloadDto(String fileName, String fileType, byte[] content) {
-        this.fileName = fileName;
+    public ResFileDownloadDto(String filename, String fileType, byte[] content) {
+        this.filename = filename;
         this.fileType = fileType;
         this.content = content;
     }
-    //File - fromFileResource
-    public  static  ResFileDownloadDto fromFileResource(
-            FileEntity file,
-            String contentType,
-            byte[] content){
 
+    public static ResFileDownloadDto fromFileResource(FileEntity file, String contentType, byte[] content) {
         return ResFileDownloadDto.builder()
-                .fileName(file.getOriginFileName())
+                .filename(file.getOriginFileName())
                 .fileType(contentType)
                 .content(content)
                 .build();

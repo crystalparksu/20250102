@@ -1,10 +1,10 @@
 package com.blog.entity;
-import com.blog.common.BaseTimeEntity;
+
 import jakarta.persistence.*;
+import com.blog.common.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 
 @Entity
 @Getter
@@ -13,20 +13,24 @@ public class Comment extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
-    @Column(name="COMMENT_ID")
+    @Column(name = "COMMENT_ID")
     private Long id;
 
     private String content;
 
-    //회원
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MEMBER_ID")
+
+    // ===== JPA 관계 매핑 =====
+    //＃다대일: 여러 개의 댓글(Comment)이 한 회원(Member)에 속해있는 것
+    @ManyToOne(fetch = FetchType.LAZY) //지연로딩
+    @JoinColumn(name = "MEMBER_ID") //조인할 컬럼(MEMBER_ID)
     public Member member;
 
-    //게시판
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MEMBER_ID")
+
+    //＃다대일: 여러 개의 댓글(Comment)이 한 게시글(Board)에 속해있는 것
+    @ManyToOne(fetch = FetchType.LAZY) //지연로딩
+    @JoinColumn(name = "BOARD_ID")
     public Board board;
+
 
 
     @Builder
@@ -37,24 +41,22 @@ public class Comment extends BaseTimeEntity {
         this.board = board;
     }
 
-
-    // Board 와의 다대일(n:1)관계를 설정하는 메서드
-    public void  setBoard(Board board){
+    // #게시판 (Board)와의 다대일(N:1) 관계를 설정하는 메소드
+    public void setBoard(Board board) {
         this.board = board;
-        board.getComments().add(this);
+        board.getComments().add(this); // Board 엔티티에도 Comment를 추가합니다.
     }
 
 
-    //Member와의 다대일(n:1)관계를 설정하는 메서드
-    public void  setMember(Member member){
+    // #회원(Member)와의 다대일(N:1) 관계를 설정하는 메소드
+    public void setMember(Member member) {
         this.member = member;
-        member.getComments().add(this);
+        member.getComments().add(this); // Member 엔티티에도 Comment를 추가합니다.
     }
 
-    //메서드
-    //댓글 수정 메서드
-    public void update(String content){
+
+    // #댓글 수정(update) 메서드
+    public void update(String content) {
         this.content = content;
     }
-
 }

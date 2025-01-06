@@ -16,12 +16,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class MemberRegisterDto {
-    //이메일,패스워드,패스워드체크,사용자이름
-    private  String email;
-    private  String password;
-    private  String passwordCheck;
-    private  String username;
-
+    private String email;
+    private String password;
+    private String passwordCheck;
+    private String username;
 
     @Builder
     public MemberRegisterDto(String email, String password, String passwordCheck, String username) {
@@ -31,8 +29,8 @@ public class MemberRegisterDto {
         this.username = username;
     }
 
-    //DTO -> Entity
-    public static Member ofEntity(MemberRegisterDto dto){
+    // DTO -> Entity
+    public static Member ofEntity(MemberRegisterDto dto) {
         return Member.builder()
                 .email(dto.getEmail())
                 .password(dto.getPassword())

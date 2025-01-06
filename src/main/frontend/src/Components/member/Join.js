@@ -1,56 +1,59 @@
 /* 회원가입 컴포넌트 */
 
 import axios from "axios";
-import {useState} from "react";
-import {useNavigate} from "react-router";
+import { useState } from "react";
+import { useNavigate } from "react-router";
 
+function Join() {
 
-//join
-function  join(){
-    const [email,setEmail] = useState("");
-    const [name,setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [name, setName] = useState("");
     const [pwd, setPwd] = useState("");
     const [checkPwd, setCheckPwd] = useState("");
-    const useNavigate = useNavigate();
 
-    //이벤트
-    const ChangeEmail = (event) => {
+    const navigate = useNavigate();
+
+    const changeEmail = (event) => {
         setEmail(event.target.value);
     }
-    const ChangeName= (event) => {
+
+    const changeName = (event) => {
         setName(event.target.value);
     }
-    const ChangePwd= (event) => {
+
+    const changePwd = (event) => {
         setPwd(event.target.value);
     }
-    const ChangeCheckPwd= (event) => {
+
+    const changeCheckPwd = (event) => {
         setCheckPwd(event.target.value);
     }
 
-
-
-    //REST API: 아이디 중복 체크
+    /* 아이디 중복 체크 */
     const checkEmailDuplicate = async () => {
-    await axios
-        .get("http://localhost:8080/user/checkId", {params: {email: email}})
-        .then((resp) => {
-            console.log(resp.data);
-            
-            if(resp.status === 200){
-                alert("사용 가능한 이메일입니다.");
-            }
-        })
-        .catch((err)=>{
-            console.log(err);
 
-            const resp = err.response;
-            if(resp.status === 4000){
-                alert(resp.data);
-            }
-        });
-    };
+        await axios.get("http://localhost:8989/user/checkId", { params: { email: email } })
+            .then((resp) => {
+                console.log("[Join.js] checkEmailDuplicate() success :D");
+                console.log(resp.data);
 
-    //REST API: 회원가입
+                if (resp.status === 200) {
+                    alert("사용 가능한 이메일입니다.");
+                }
+            })
+            .catch((err) => {
+                console.log("[Join.js] checkEmailDuplicate() error :<");
+                console.log(err);
+
+                const resp = err.response;
+                if (resp.status === 400) {
+                    alert(resp.data);
+                }
+            });
+
+    }
+
+    /* 회원가입 */
     const join = async () => {
 
         const req = {
@@ -58,28 +61,27 @@ function  join(){
             password: pwd,
             passwordCheck: checkPwd,
             username: name,
-        };
+        }
 
-        await axios
-            .post("http://localhost:8080/user/register", req)
-            .then((resp) =>{
+        await axios.post("http://localhost:8989/user/register", req)
+            .then((resp) => {
+                console.log("[Join.js] join() success :D");
                 console.log(resp.data);
 
-                alert(resp.data.username + "님 회원가입을 축하드립니다.");
+                alert(resp.data.username + "님 회원가입을 축하드립니다 🎊");
                 navigate("/login");
-            })
-            .catch((err)=>{
+
+            }).catch((err) => {
+                console.log("[Join.js] join() error :<");
                 console.log(err);
 
                 const resp = err.response;
-                if(resp.status === 4000){
+                if (resp.status === 400) {
                     alert(resp.data);
                 }
             });
-    };
+    }
 
-
-    //HTML
     return (
         <div>
             <table className="table">
@@ -123,4 +125,5 @@ function  join(){
         </div>
     );
 }
+
 export default Join;

@@ -1,72 +1,61 @@
 /* 로그인 컴포넌트 */
 
-//기본
 import axios from "axios";
-import { useState , useContext} from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router";
-
-//인증
 import { AuthContext } from "../context/AuthProvider";
 import { HttpHeadersContext } from "../context/HttpHeadersProvider";
 
+function Login() {
 
-//---------------
-function Login(){
-    //설정
-    const [auth, setAuth] = useContext(AuthContext);
-    const [headers, setHeaders] = useContext(HttpHeadersContext);
+    const { auth, setAuth } = useContext(AuthContext);
+    const { headers, setHeaders } = useContext(HttpHeadersContext);
 
-    //이동
-    const useNavigate = useNavigate();
+    const navigate = useNavigate();
 
-    //이벤트
-    const [id,setId] = useState("");
+    const [id, setId] = useState("");
     const [pwd, setPwd] = useState("");
 
-    const ChangeId = (event) => {
+    const changeId = (event) => {
         setId(event.target.value);
     }
-    const ChangePwd = (event) => {
+
+    const changePwd = (event) => {
         setPwd(event.target.value);
     }
 
-
-    //REST API (로그인)
     const login = async () => {
 
         const req = {
             email: id,
-            password: pwd,
-        };
+            password: pwd
+        }
 
-        await axios
-            .post("http://localhost:8080/user/login", req)
-            .then((resp) =>{
+        await axios.post("http://localhost:8989/user/login", req)
+            .then((resp) => {
+                console.log("[Login.js] login() success :D");
                 console.log(resp.data);
 
-                alert(resp.data.email + "님, 성공적으로 로그인 되었습니다.");
+                alert(resp.data.email + "님, 성공적으로 로그인 되었습니다 🔐");
 
-                //JWT 저장
+                // JWT 토큰 저장
                 localStorage.setItem("bbs_access_token", resp.data.token);
                 localStorage.setItem("id", resp.data.email);
 
-                //사용자 인증 정보 - 아이디 저장
-                setAuth(resp.data.email);
-
-                //헤더 Authorization 토큰 필드 저장
-                setHeaders({ Authorization: `Bearer ${resp.data.token}` });
+                setAuth(resp.data.email); // 사용자 인증 정보(아이디 저장)
+                setHeaders({"Authorization": `Bearer ${resp.data.toekn}`}); // 헤더 Authorization 필드 저장
 
                 navigate("/bbslist");
-            })
-            .catch((err)=>{
+
+
+            }).catch((err) => {
+                console.log("[Login.js] login() error :<");
                 console.log(err);
 
                 alert("⚠️ " + err.response.data);
             });
-    };
+    }
 
-
-    //HTML
     return (
         <div>
             <table className="table">
@@ -81,25 +70,18 @@ function Login(){
                 <tr>
                     <th>비밀번호</th>
                     <td>
-                        <input
-                            type="password"
-                            value={pwd}
-                            onChange={changePwd}
-                            size="50px"
-                        />
+                        <input type="password" value={pwd} onChange={changePwd} size="50px" />
                     </td>
                 </tr>
                 </tbody>
-            </table>
-            <br />
+            </table><br />
 
             <div className="my-1 d-flex justify-content-center">
-                <button className="btn btn-outline-secondary" onClick={login}>
-                    <i className="fas fa-sign-in-alt"></i> 로그인
-                </button>
+                <button className="btn btn-outline-secondary" onClick={login}><i className="fas fa-sign-in-alt"></i> 로그인</button>
             </div>
+
         </div>
     );
 }
-export default Login;
 
+export default Login;

@@ -17,13 +17,10 @@ import javax.print.attribute.standard.Fidelity;
 @NoArgsConstructor
 public class ResFileUploadDto {
 
-
-
     private Long fileId;
     private String originFileName;
     private String filePath;
     private String fileType;
-
 
     @Builder
     public ResFileUploadDto(Long fileId, String originFileName, String filePath, String fileType) {
@@ -33,8 +30,6 @@ public class ResFileUploadDto {
         this.fileType = fileType;
     }
 
-
-    //fromEntity
     public static ResFileUploadDto fromEntity(FileEntity file) {
         return ResFileUploadDto.builder()
                 .fileId(file.getId())

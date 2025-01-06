@@ -1,9 +1,8 @@
-package com.blog.dto.response.board;
+
 
 
 import com.blog.dto.response.comment.ResCommentDto;
 import com.blog.dto.response.file.ResBoardDetailsFileDto;
-import com.blog.entity.Board;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,10 +15,12 @@ import java.util.stream.Collectors;
  * -Response-
  * 게시글 상세, 수정 요청에 대한 정보를 반환
  */
+
 @Getter
 @Setter
 @NoArgsConstructor
 public class ResBoardDetailsDto {
+
     // board info
     private Long boardId;
     private String title;
@@ -29,12 +30,11 @@ public class ResBoardDetailsDto {
     private String createdDate;
     private String modifiedDate;
 
-    //comments
+    // comments
     private List<ResCommentDto> comments;
 
-    //file
+    // file
     private List<ResBoardDetailsFileDto> files;
-
 
     @Builder
     public ResBoardDetailsDto(Long boardId, String title, String content, int viewCount, String writerName, String createdDate, String modifiedDate, List<ResCommentDto> comments, List<ResBoardDetailsFileDto> files) {
@@ -49,19 +49,15 @@ public class ResBoardDetailsDto {
         this.files = files;
     }
 
-    //
-    public static ResBoardDetailsDto fromEntity(Board board) {
+    public static <Board> ResBoardDetailsDto fromEntity(Board board) {
         return ResBoardDetailsDto.builder()
                 .boardId(board.getId())
                 .title(board.getTitle())
                 .content(board.getContent())
                 .viewCount(board.getViewCount())
-
                 .writerName(board.getMember().getUsername())
-
                 .createdDate(board.getCreatedDate())
                 .modifiedDate(board.getModifiedDate())
-
                 .comments(board.getComments().stream()
                         .map(ResCommentDto::fromEntity)
                         .collect(Collectors.toList()))

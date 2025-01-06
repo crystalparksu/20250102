@@ -1,20 +1,18 @@
 package com.blog.entity;
 
-
-//회원 관련 로직
+import jakarta.persistence.*;
 import com.blog.common.BaseTimeEntity;
 import com.blog.common.Role;
-import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 
 
 @Getter
@@ -44,11 +42,12 @@ public class Member extends BaseTimeEntity implements UserDetails {
     private Role roles;
 
 
+    // ===== JPA 관계 매핑 =====
+    //＃일대다: 한 회원(Member)의 여러 게시글(Board)
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     public List<Board> boards = new ArrayList<>();
 
-
-
+    //＃일대다: 한 회원(Member)의 여러 댓글(Comment)
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     public List<Comment> comments = new ArrayList<>();
 
@@ -63,7 +62,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
     }
 
 
-    //== update ==//
+    //== 회원정보 수정 (update) ==//
     public void update(String password, String username) {
         this.password = password;
         this.username = username;
@@ -74,41 +73,35 @@ public class Member extends BaseTimeEntity implements UserDetails {
      * Token을 고유한 Email 값으로 생성합니다
      * @return email;
      */
-
     @Override
-    public String getUsername() {
+    public String getUsername() { //사용자 이름 가져오기
         return email;
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+    public Collection<? extends GrantedAuthority> getAuthorities() {//권한 얻기
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         authorities.add( new SimpleGrantedAuthority("ROLE_" + this.roles.name()));
         return authorities;
     }
 
     @Override
-    public boolean isAccountNonExpired() {
+    public boolean isAccountNonExpired() {//계정이 만료되지 않음
         return true;
     }
 
     @Override
-    public boolean isAccountNonLocked() {
+    public boolean isAccountNonLocked() { //계정이 잠금되지 않음
         return true;
     }
 
     @Override
-    public boolean isCredentialsNonExpired() {
+    public boolean isCredentialsNonExpired() {//자격 증명이 만료되지 않음
         return true;
     }
 
     @Override
-    public boolean isEnabled() {
+    public boolean isEnabled() {//활성화됨
         return true;
     }
 }
-
-
-
-
-

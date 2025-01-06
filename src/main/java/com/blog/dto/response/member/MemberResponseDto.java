@@ -15,9 +15,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class MemberResponseDto {
-
-    private  String email;
-    private  String username;
+    // 사용자 DB 인덱스 값을 굳이 사용자에게 노출시킬 필요는 없다고 생각
+    private String email;
+    private String username;
 
     @Builder
     public MemberResponseDto(String email, String username) {
@@ -25,11 +25,11 @@ public class MemberResponseDto {
         this.username = username;
     }
 
-    //Entity -> DTO
-    public  static  MemberResponseDto fromEntity(Member member){
+    // Entity -> DTO
+    public static MemberResponseDto fromEntity(Member member) {
         return MemberResponseDto.builder()
                 .email(member.getEmail())
-                .username(member.getusername())
+                .username(member.getUsername())
                 .build();
     }
 }
